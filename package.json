@@ -1,0 +1,34 @@
+{
+  "name": "agent",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@luno-kit/react": "^0.0.10",
+    "@luno-kit/ui": "^0.0.10",
+    "@polkadot/api": "^16.5.4",
+    "@polkadot/types": "^16.5.4",
+    "@polkadot/util": "^14.0.2",
+    "@polkadot/util-crypto": "^14.0.2",
+    "@tanstack/react-query": "^5.90.3",
+    "axios": "^1.13.6",
+    "framer-motion": "^12.38.0",
+    "lucide-react": "^0.577.0",
+    "next": "15.4.3",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

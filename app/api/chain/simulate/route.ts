@@ -1,0 +1,36 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { PolkadotAgentClient } from '@/lib/polkadot-agent/client';
+import type { SubstrateExtrinsic } from '@/lib/polkadot-agent/types';
+
+export async function POST(req: NextRequest) {
+  const wsEndpoint = process.env.SUBSTRATE_WS_ENDPOINT ?? 'wss://rpc.polkadot.io';
+
+  const client = new PolkadotAgentClient({
+    wsEndpoint,
+    network: 'polkadot',
+    ollamaUrl: process.env.OLLAMA_URL ?? 'http://localhost:11434',
+  });
+
+  try {
+    const { extrinsics, parallel } = await req.json();
+
+    if (!Array.isArray(extrinsics) || extrinsics.length === 0) {
+      return NextResponse.json({ error: 'extrinsics array is required' }, { status: 400 });
+    }
+
+    await client.connect();
+    const result = await client.dryRunBatch(
+      extrinsics as SubstrateExtrinsic[],
+      parallel ?? false,
+    );
+    await client.disconnect();
+
+    return NextResponse.json(result);
+  } catch (error) {
+    try { await client.disconnect(); } catch {}
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Simulation failed' },
+      { status: 500 },
+    );
+  }
+}

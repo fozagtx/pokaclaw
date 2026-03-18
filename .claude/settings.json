@@ -1,0 +1,9 @@
+{
+  "skills": {
+    "ui": {
+      "path": ".claude/skills/ui.md",
+      "description": "Polkadot design system — colors, typography, layout patterns, components, and animations. Use when building or modifying any UI.",
+      "trigger": "always"
+    }
+  }
+}
