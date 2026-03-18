@@ -8,7 +8,7 @@ import { MetricsDisplay } from '@/components/dashboard/metrics-display';
 import { SimulationPanel } from '@/components/dashboard/simulation-panel';
 import { TransactionList } from '@/components/dashboard/transaction-list';
 import { ChainStatus } from '@/components/dashboard/chain-status';
-import type { SimulationResult, BatchSimulationResult } from '@/lib/polkadot-agent/types';
+import type { SubstrateExtrinsic, SimulationResult, BatchSimulationResult } from '@/lib/polkadot-agent/types';
 
 export default function DashboardPage() {
   const { address } = useAccount();
@@ -19,19 +19,11 @@ export default function DashboardPage() {
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
-  const handleRun = useCallback(async (count: number, parallel: boolean) => {
+  const handleRun = useCallback(async (extrinsics: SubstrateExtrinsic[], parallel: boolean) => {
     setIsRunning(true);
     setProgress(0);
     setResults([]);
     setError(null);
-
-    // Build real extrinsics, use connected address as both sender/receiver for dry-run
-    const dest = address ?? '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
-    const extrinsics = Array.from({ length: count }, () => ({
-      pallet: 'balances',
-      method: 'transferKeepAlive',
-      args: [dest, '1000000000'],
-    }));
 
     setProgress(10);
 
@@ -56,7 +48,7 @@ export default function DashboardPage() {
     } finally {
       setIsRunning(false);
     }
-  }, [address]);
+  }, []);
 
   const totalExtrinsics = results.length;
   const successRate = totalExtrinsics > 0
