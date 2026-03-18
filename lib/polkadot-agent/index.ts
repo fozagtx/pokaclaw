@@ -6,6 +6,7 @@ export type { AIProvider, AIProviderType } from './ai-service';
 export { getAIService } from './get-ai-service';
 export { PROMPTS } from './prompts';
 export { parseActionsFromAI, ACTION_EXAMPLES } from './actions';
+export { addMemory, recallMemories, forgetMemory } from './memory';
 export type { OnchainAction, ActionType } from './actions';
 export type {
   PolkadotAgentConfig,

@@ -48,7 +48,7 @@ export default function AgentPage() {
       const res = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: messagesWithContext }),
+        body: JSON.stringify({ messages: messagesWithContext, walletAddress: address }),
       });
 
       const data = await res.json();
@@ -101,8 +101,13 @@ export default function AgentPage() {
       const method = pallet[action.method];
       if (!method) throw new Error(`Unknown method: ${action.pallet}.${action.method}`);
 
-      // Convert args object to ordered array based on the method
-      const argValues = Object.values(action.args);
+      // Convert args — numeric strings become BigInt for Substrate compatibility
+      const argValues = Object.values(action.args).map((v) => {
+        if (typeof v === 'string' && /^\d+$/.test(v) && v.length > 0) {
+          return BigInt(v);
+        }
+        return v;
+      });
       const extrinsic = method(...argValues);
 
       setActions((prev) =>

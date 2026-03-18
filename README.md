@@ -66,7 +66,7 @@ Dry-run any extrinsic against the live chain without submitting. Define pallet, 
 ```mermaid
 graph LR
     User[User Input] -->|"pallet / method / args"| Form[Extrinsic Builder]
-    Form -->|"1..N extrinsics"| API[/api/chain/simulate]
+    Form -->|"1..N extrinsics"| API["api/chain/simulate"]
     API --> Client[PolkadotAgentClient.dryRun]
     Client -->|parallel=false| Seq[Sequential]
     Client -->|parallel=true| Par[Promise.all]

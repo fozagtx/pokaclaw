@@ -47,6 +47,9 @@ importers:
       react-dom:
         specifier: ^19.2.4
         version: 19.2.4(react@19.2.4)
+      supermemory:
+        specifier: ^4.17.0
+        version: 4.17.0
     devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4
@@ -1835,6 +1838,10 @@ packages:
         optional: true
       babel-plugin-macros:
         optional: true
+
+  supermemory@4.17.0:
+    resolution: {integrity: sha512-+37Lwl85cEtNxQRqLCg+b8L07KT9s/2Wuc1jzWOd+n+A9SIQpOZRgg8bIVWgsi3vLpnYcjFdu7/6xjTH+PUQsA==}
+    hasBin: true
 
   tailwind-merge@2.6.0:
     resolution: {integrity: sha512-P+Vu1qXfzediirmHOC3xKGAYeZtPcV9g76X+xg2FD4tYgR71ewMA35Y3sCz3zhiN/dwefRpJX0yBcgwi1fXNQA==}
@@ -4163,6 +4170,8 @@ snapshots:
     dependencies:
       client-only: 0.0.1
       react: 19.2.4
+
+  supermemory@4.17.0: {}
 
   tailwind-merge@2.6.0: {}
 
