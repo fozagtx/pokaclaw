@@ -1,12 +1,19 @@
 import { NextResponse } from 'next/server';
 import { PolkadotAgentClient } from '@/lib/polkadot-agent/client';
 
+function detectNetwork(endpoint: string): 'polkadot' | 'kusama' | 'westend' | 'local' {
+  if (endpoint.includes('westend')) return 'westend';
+  if (endpoint.includes('kusama')) return 'kusama';
+  if (endpoint.includes('localhost') || endpoint.includes('127.0.0.1')) return 'local';
+  return 'polkadot';
+}
+
 export async function GET() {
   const wsEndpoint = process.env.SUBSTRATE_WS_ENDPOINT ?? 'wss://rpc.polkadot.io';
 
   const client = new PolkadotAgentClient({
     wsEndpoint,
-    network: 'polkadot',
+    network: detectNetwork(wsEndpoint),
     ollamaUrl: process.env.OLLAMA_URL ?? 'http://localhost:11434',
   });
 

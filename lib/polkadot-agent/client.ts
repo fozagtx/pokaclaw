@@ -92,8 +92,8 @@ export class PolkadotAgentClient {
       let proofSize = 0;
 
       try {
-        // Try the newer rpc call for weight info
-        const callInfo = await this.api!.call.transactionPaymentApi.queryInfo(tx.toHex(), 0);
+        // Try the runtime API call for weight info
+        const callInfo = await this.api!.call.transactionPaymentApi.queryInfo(tx.toHex(), tx.encodedLength);
         const weight = (callInfo as any).weight;
         refTime = typeof weight.refTime?.toNumber === 'function'
           ? weight.refTime.toNumber()
@@ -104,16 +104,21 @@ export class PolkadotAgentClient {
           : typeof weight.proofSize === 'bigint' ? Number(weight.proofSize)
           : Number(weight.proofSize ?? 0);
       } catch {
-        // Fall back to queryCallInfo via state call
-        const info = await this.api!.rpc.state.call(
-          'TransactionPaymentApi_query_info',
-          tx.toHex()
-        );
-        // Parse raw response - weight is embedded in the response
-        const hexData = info.toHex();
-        // Extract weight from the raw encoded data
-        refTime = parseInt(hexData.slice(2, 18), 16) || 0;
-        proofSize = parseInt(hexData.slice(18, 34), 16) || 0;
+        // Fall back to payment info query
+        try {
+          const paymentInfo = await tx.paymentInfo('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY');
+          const weight = (paymentInfo as any).weight;
+          refTime = typeof weight.refTime?.toNumber === 'function'
+            ? weight.refTime.toNumber()
+            : Number(weight.refTime ?? 0);
+          proofSize = typeof weight.proofSize?.toNumber === 'function'
+            ? weight.proofSize.toNumber()
+            : Number(weight.proofSize ?? 0);
+        } catch {
+          // Weight estimation unavailable for this runtime
+          refTime = 0;
+          proofSize = 0;
+        }
       }
 
       return {
